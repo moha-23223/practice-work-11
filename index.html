@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>зад 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+        
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e0ffe0;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Форма опроса</h1>
+
+        <form id="survey-form">
+            <label for="name">Имя пользователя:</label>
+            <input type="text" id="name" name="name" required>
+            <div class="error" id="name-error"></div>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <div class="error" id="email-error"></div>
+
+            <label>Пол:</label>
+            <input type="radio" id="male" name="gender" value="Мужской">
+            <label for="male">Мужской</label>
+            <input type="radio" id="female" name="gender" value="Женский">
+            <label for="female">Женский</label>
+            <div class="error" id="gender-error"></div>
+
+            <label for="rating">Оценка сервиса (1-100):</label>
+            <input type="range" id="rating" name="rating" min="1" max="100" value="5">
+            <div>Оценка: <span id="rating-value">5</span></div>
+
+            <label for="interests">Интересы пользователя:</label>
+            <input type="checkbox" id="sport" name="interests" value="Спорт">
+            <label for="sport">Спорт</label>
+            <input type="checkbox" id="music" name="interests" value="Музыка">
+            <label for="music">Музыка</label>
+            <input type="checkbox" id="travel" name="interests" value="Путешествия">
+            <label for="travel">Путешествия</label>
+            <input type="checkbox" id="cinema" name="interests" value="Кино">
+            <label for="cinema">Кино</label>
+
+            <label for="comments">Дополнительные комментарии:</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+
+            <button type="submit">Отправить</button>
+        </form>
+
+        <div class="hidden result" id="result">
+            <h3>Результаты опроса:</h3>
+            <p><strong>Имя:</strong> <span id="result-name"></span></p>
+            <p><strong>Email:</strong> <span id="result-email"></span></p>
+            <p><strong>Пол:</strong> <span id="result-gender"></span></p>
+            <p><strong>Оценка сервиса:</strong> <span id="result-rating"></span></p>
+            <p><strong>Интересы пользователя:</strong> <span id="result-interests"></span></p>
+            <p><strong>Дополнительные комментарии:</strong> <span id="result-comments"></span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('rating').addEventListener('input', function() {
+            document.getElementById('rating-value').textContent = this.value;
+        });
+
+        document.getElementById('survey-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+
+            document.getElementById('name-error').textContent = '';
+            document.getElementById('email-error').textContent = '';
+            document.getElementById('gender-error').textContent = '';
+
+            let valid = true;
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let gender = document.querySelector('input[name="gender"]:checked');
+            let rating = document.getElementById('rating').value;
+            let interests = [];
+            document.querySelectorAll('input[name="interests"]:checked').forEach(function(checkbox) {
+                interests.push(checkbox.value);
+            });
+            let comments = document.getElementById('comments').value;
+
+
+            if (!name) {
+                document.getElementById('name-error').textContent = 'Имя обязательно для заполнения.';
+                valid = false;
+            }
+
+
+            if (!email) {
+                document.getElementById('email-error').textContent = 'Email обязателен для заполнения.';
+                valid = false;
+            } else if (!/\S+@\S+\.\S+/.test(email)) {
+                document.getElementById('email-error').textContent = 'Введите корректный email.';
+                valid = false;
+            }
+
+
+            if (!gender) {
+                document.getElementById('gender-error').textContent = 'Выберите пол.';
+                valid = false;
+            }
+
+            if (valid) {
+                document.getElementById('result-name').textContent = name;
+                document.getElementById('result-email').textContent = email;
+                document.getElementById('result-gender').textContent = gender.value;
+                document.getElementById('result-rating').textContent = rating;
+                document.getElementById('result-interests').textContent = interests.length > 0 ? interests.join(', ') : 'Нет интересов';
+                document.getElementById('result-comments').textContent = comments ? comments : 'Нет комментариев';
+
+                document.getElementById('result').classList.remove('hidden');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
